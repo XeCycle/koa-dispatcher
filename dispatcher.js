@@ -3,15 +3,11 @@
  */
 
 Define(["koa-compose", "path-to-regexp"], function(compose, pathToReg) {
-  var GeneratorFunction = (function*() {}).constructor;
 
-  // evaluates condition in request context
-  // not the full context, to prevent unwanted behaviour
+  // evaluates condition for request
   function evalCond(req, cond) {
-    if (cond instanceof GeneratorFunction)
-      return cond.call(req, req);
-    if (cond instanceof Function)
-      return Promise.resolve(cond.call(req, req));
+    if (typeof cond === "function")
+      return Promise.resolve(cond(req));
     return Promise.resolve(cond);
   }
 
@@ -20,9 +16,11 @@ Define(["koa-compose", "path-to-regexp"], function(compose, pathToReg) {
   return $d = {
     compose,
     // returns a middleware function which:
-    // if condition passes, invoke koa-compose(handlers).
-    when(condition, ...handlers) {
-      var handler = compose(handlers);
+    // if condition passes, invokes handler; else yield next.
+    // if handler is an array it is composed by koa-compose.
+    when(condition, handler) {
+      if (handler instanceof Array)
+        handler = compose(handler);
       return function*(next) {
         if (yield evalCond(this.request, condition))
           yield* handler.call(this, next);
@@ -31,51 +29,49 @@ Define(["koa-compose", "path-to-regexp"], function(compose, pathToReg) {
     },
     // helpers to combine conditions
     and(...conds) {
-      return function*() {
-        for (let cond of conds)
-          if (!yield evalCond(this, cond))
-            return false;
-        return true;
-      };
+      if (conds.length === 0) return () => Promise.resolve(true);
+      return req => (function next(i) {
+        return evalCond(req, conds[i]).then(
+          ok => i+1<conds.length
+            ? ok && next(i+1)
+            : ok
+        );
+      })(0);
     },
     or(...conds) {
-      return function*() {
-        for (let cond of conds)
-          if (yield evalCond(this, cond))
-            return true;
-        return false;
-      };
+      if (conds.length === 0) return () => Promise.resolve(false);
+      return req => (function next(i) {
+        return evalCond(req, conds[i]).then(
+          ok => i+1<conds.length
+            ? ok || next(i+1)
+            : ok
+        );
+      })(0);
     },
     not(cond) {
-      return function*() {
-        return !yield evalCond(this, cond);
-      };
+      return req => evalCond(req, cond).then(v => !v);
     },
     // common matchings
     route(path, opts) {
       var keys = [];
       var reg = pathToReg(path, keys, opts);
-      return function() {
-        var match = reg.exec(this.url);
+      return req => {
+        var match = reg.exec(req.url);
         if (match) {
-          if (!(this.params instanceof Object))
-            this.params = {};
-          this.params.should.be.instanceof(Object);
+          if (!(req.params instanceof Object))
+            req.params = {};
+          req.params.should.be.instanceof(Object);
           for (let i=1; i<match.length; ++i)
-            this.params[keys[i-1].name] = match[i];
+            req.params[keys[i-1].name] = match[i];
           return true;
         }
       };
     },
     method(...methods) {
-      return function() {
-        return methods.find(method => method.toUpperCase() === this.method);
-      };
+      return req => methods.find(m => m.toUpperCase() === req.method);
     },
     accepts(...types) {
-      return function() {
-        return this.accepts(...types);
-      };
+      return req => req.accepts(...types);
     }
   };
   /* jshint +W093 */
