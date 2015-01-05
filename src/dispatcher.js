@@ -62,8 +62,9 @@ var $d = {
       }
     };
   },
-  method(...methods) {
-    return req => methods.find(m => m.toUpperCase() === req.method);
+  method() {
+    var methods = Array.prototype.map.call(arguments, m => m.toUpperCase());
+    return req => methods.indexOf(req.method) >= 0;
   },
   accepts(...types) {
     return req => req.accepts(...types);
