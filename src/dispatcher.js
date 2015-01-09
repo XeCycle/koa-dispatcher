@@ -55,7 +55,6 @@ var $d = {
       if (match) {
         if (!(req.params instanceof Object))
           req.params = {};
-        req.params.should.be.instanceof(Object);
         for (let i=1; i<match.length; ++i)
           req.params[keys[i-1].name] = match[i];
         return true;
