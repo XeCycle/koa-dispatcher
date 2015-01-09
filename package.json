@@ -1,6 +1,6 @@
 {
   "name": "koa-dispatcher",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Dispatch request to koa middlewares using flexible rules",
   "keywords": [
     "koa",
@@ -9,7 +9,8 @@
   ],
   "main": "lib/dispatcher.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "gulp"
   },
   "repository": {
     "type": "git",
