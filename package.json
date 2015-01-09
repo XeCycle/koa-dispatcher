@@ -2,6 +2,11 @@
   "name": "koa-dispatcher",
   "version": "0.0.1",
   "description": "Dispatch request to koa middlewares using flexible rules",
+  "keywords": [
+    "koa",
+    "middleware",
+    "dispatcher"
+  ],
   "main": "lib/dispatcher.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
