@@ -51,7 +51,7 @@ var $d = {
     var keys = [];
     var reg = pathToReg(path, keys, opts);
     return req => {
-      var match = reg.exec(req.url);
+      var match = reg.exec(req.path);
       if (match) {
         if (!(req.params instanceof Object))
           req.params = {};
