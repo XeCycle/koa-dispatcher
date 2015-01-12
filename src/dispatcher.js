@@ -67,5 +67,54 @@ var $d = {
   },
   accepts(...types) {
     return req => req.accepts(...types);
+  },
+  acceptsEncodings(...codings) {
+    return req => req.acceptsEncodings(...codings);
+  },
+  acceptsCharsets(...sets) {
+    return req => req.acceptsCharsets(...sets);
+  },
+  acceptsLanguages(...langs) {
+    return req => req.acceptsLanguages(...langs);
+  },
+  header(field, valueOrPred) {
+    if (arguments.length === 1)
+      return req => req.header[field];
+    if (typeof valueOrPred === "function")
+      return req => field in req.header && valueOrPred(req.header[field]);
+    return req => req.header[field] == valueOrPred;
+  },
+  hostname(name) {
+    if (arguments.length)
+      return req => req.hostname === name;
+    return req => req.hostname;
+  },
+  typeIs() {
+    var types = arguments;
+    return req => req.is.apply(this, types);
+  },
+  charset(set) {
+    return req => req.charset === undefined || req.charset === set;
+  },
+  fresh() {
+    return req => req.fresh;
+  },
+  stale() {
+    return req => req.stale;
+  },
+  protocol(prot) {
+    return req => req.protocol === prot;
+  },
+  secure() {
+    return req => req.secure;
+  },
+  ip(match) {
+    var pattern = new RegExp(match
+                             .replace(/\./g, "\\.")
+                             .replace(/\*/g, "[0-9]+"));
+    return req => pattern.test(req.ip);
+  },
+  subdomain(domain) {
+    return req => req.subdomains.reverse().join(".") === domain;
   }
 };
