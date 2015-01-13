@@ -1,4 +1,8 @@
+# koa-dispatcher
+
 [![Build Status](https://travis-ci.org/XeCycle/koa-dispatcher.svg?branch=master)](https://travis-ci.org/XeCycle/koa-dispatcher)
+[![Dependency Status](https://img.shields.io/david/XeCycle/koa-dispatcher.svg))](https://david-dm.org/XeCycle/koa-dispatcher)
+[![DevDependency Status](https://img.shields.io/david/dev/XeCycle/koa-dispatcher.svg))](https://david-dm.org/XeCycle/koa-dispatcher)
 
 The name "dispatcher" is actually misleading.  It could be better
 named "koa-composer", as it composes multiple handlers into one,
@@ -14,7 +18,8 @@ Assuming you did `var D = require("koa-dispatcher")`:
   object; if the value or returned value (possibly a `Promise`)
   resolves to truthy, `handler(s)` are executed.  `handler(s)`
   may be a single generator function, or an array of generator
-  functions, in which case it is stacked up by `koa-compose`.
+  functions, in which case it is stacked up by `koa-compose`.  If
+  `condition` is a function it is called only once for a request.
 
 - `D.compose` is exactly the same as `koa-compose`.
 
