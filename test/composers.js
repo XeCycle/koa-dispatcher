@@ -48,18 +48,25 @@ describe("when()", function() {
     it("sync", function() {
       return Promise.all([
         check(syncTruthyFn).should.become(true).then(
-          syncTruthyFn.should.always.have.been.calledOnce.and.calledWith(ctx.request)),
+          syncTruthyFn.should.have.been.calledOnce.and.calledWith(ctx.request)),
         check(syncFalsyFn).should.become(false).then(
-          syncFalsyFn.should.always.have.been.calledOnce.and.calledWith(ctx.request))
+          syncFalsyFn.should.have.been.calledOnce.and.calledWith(ctx.request))
       ]);
     });
     it("async", function() {
       return Promise.all([
         check(asyncTruthyFn).should.become(true).then(
-          asyncTruthyFn.should.always.have.been.calledOnce.and.calledWith(ctx.request)),
+          asyncTruthyFn.should.have.been.calledOnce.and.calledWith(ctx.request)),
         check(asyncFalsyFn).should.become(false).then(
-          asyncFalsyFn.should.always.have.been.calledOnce.and.calledWith(ctx.request))
+          asyncFalsyFn.should.have.been.calledOnce.and.calledWith(ctx.request))
       ]);
+    });
+  });
+
+  it("compose array handlers", function() {
+    return new Promise(function(resolve) {
+      var mw = D.when(true, [function*() { resolve(true); }]);
+      $co.wrap(mw).call(ctx);
     });
   });
 
