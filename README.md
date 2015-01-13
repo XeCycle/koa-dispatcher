@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/XeCycle/koa-dispatcher.svg?branch=master)](https://travis-ci.org/XeCycle/koa-dispatcher)
+
 The name "dispatcher" is actually misleading.  It could be better
 named "koa-composer", as it composes multiple handlers into one,
 using flexible rules to decide the handler(s) to execute; but I
