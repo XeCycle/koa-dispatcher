@@ -1,6 +1,7 @@
 var gulp = require("gulp");
 var umd = require("gulp-umd");
 var to5 = require("gulp-6to5");
+var $cp = require("child_process");
 
 gulp.task("dist", function() {
   return gulp.src("src/*.js")
@@ -15,3 +16,12 @@ gulp.task("dist", function() {
 });
 
 gulp.task("default", ["dist"]);
+
+gulp.task("test", ["default"], function(done) {
+  var mocha = $cp.spawn("mocha", ["--harmony", "--require", "./test"], {
+    stdio: "inherit"
+  });
+  mocha.on("exit", function(code, signal) {
+    done(signal || code);
+  });
+});
