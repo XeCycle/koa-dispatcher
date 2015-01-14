@@ -84,17 +84,20 @@ var $d = {
       return req => field in req.header && valueOrPred(req.header[field]);
     return req => req.header[field] == valueOrPred;
   },
-  hostname(name) {
-    if (arguments.length)
-      return req => req.hostname === name;
+  hostname() {
+    var names = arguments;
+    if (names.length)
+      return req => Array.prototype.indexOf.call(names, req.hostname) >= 0;
     return req => req.hostname;
   },
   typeIs() {
     var types = arguments;
     return req => req.is.apply(this, types);
   },
-  charset(set) {
-    return req => req.charset === undefined || req.charset === set;
+  charset() {
+    var sets = arguments;
+    return req => req.charset === undefined ||
+      Array.prototype.indexOf.call(sets, req.charset) >= 0;
   },
   fresh() {
     return req => req.fresh;
