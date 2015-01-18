@@ -14,6 +14,24 @@ var $d = {
   // if condition passes, invokes handler; else yield next.
   // if handler is an array it is composed by koa-compose.
   when(condition, handler) {
+    if (Array.isArray(handler))
+      handler = compose(handler);
+    if (typeof condition === "function")
+      return function*(next) {
+        if (condition(this.request))
+          yield* handler.call(this, next);
+        else yield next;
+      };
+    else if (condition)
+      return function*(next) {
+        yield* handler.call(this, next);
+      };
+    else
+      return function*(next) {
+        yield* next;
+      };
+  },
+  awhen(condition, handler) {
     if (handler instanceof Array)
       handler = compose(handler);
     return function*(next) {

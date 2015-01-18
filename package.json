@@ -1,6 +1,6 @@
 {
   "name": "koa-dispatcher",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Dispatch request to koa middlewares using flexible rules",
   "keywords": [
     "koa",
