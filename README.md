@@ -15,11 +15,15 @@ Assuming you did `var D = require("koa-dispatcher")`:
 - `D.when(condition, handler(s))` is the main entry to this
   library.  It returns the composed middleware from handler(s).
   `condition` is a value or function called with koa request
-  object; if the value or returned value (possibly a `Promise`)
-  resolves to truthy, `handler(s)` are executed.  `handler(s)`
-  may be a single generator function, or an array of generator
-  functions, in which case it is stacked up by `koa-compose`.  If
+  object; if the value or returned value is truthy, `handler(s)`
+  are executed, otherwise yield next.  `handler(s)` may be a
+  single generator function, or an array of generator functions,
+  in which case it is stacked up by `koa-compose`.  If
   `condition` is a function it is called only once for a request.
+
+- `D.awhen(condition, handlers(s))` is similar to above, but for
+  async values or functions.  The value or returned value shall
+  be a ES6 compatible `Promise`.
 
 - `D.compose` is exactly the same as `koa-compose`.
 
