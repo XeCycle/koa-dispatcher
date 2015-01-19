@@ -40,30 +40,6 @@ var $d = {
       else yield next;
     };
   },
-  // helpers to combine conditions
-  and(...conds) {
-    if (conds.length === 0) return () => Promise.resolve(true);
-    return req => (function next(i) {
-      return evalCond(req, conds[i]).then(
-        ok => i+1<conds.length
-          ? ok && next(i+1)
-          : ok
-      );
-    })(0);
-  },
-  or(...conds) {
-    if (conds.length === 0) return () => Promise.resolve(false);
-    return req => (function next(i) {
-      return evalCond(req, conds[i]).then(
-        ok => i+1<conds.length
-          ? ok || next(i+1)
-          : ok
-      );
-    })(0);
-  },
-  not(cond) {
-    return req => evalCond(req, cond).then(v => !v);
-  },
   // common matchings
   route(path, opts) {
     var keys = [];
