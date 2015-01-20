@@ -27,9 +27,6 @@ Assuming you did `var D = require("koa-dispatcher")`:
 
 - `D.compose` is exactly the same as `koa-compose`.
 
-- `D.and`, `D.or`, `D.not` are currently provided to compose
-  conditions.  Will be removed soon.
-
 The provided condition functions are:
 
 - `D.route(path, opts)`: `path` and `opts` passed to
