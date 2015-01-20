@@ -27,6 +27,12 @@ Assuming you did `var D = require("koa-dispatcher")`:
 
 - `D.compose` is exactly the same as `koa-compose`.
 
+- `D.acceptCase([types], table like { type: handler, ... })` does
+  `this.accepts(...types)`, if the returned type is found in
+  table, executes that handler.  Also composes array handlers.
+  If `types` is not given, it is obtained by
+  `Object.keys(table)`.
+
 The provided condition functions are:
 
 - `D.route(path, opts)`: `path` and `opts` passed to

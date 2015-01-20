@@ -62,6 +62,20 @@ var $d = {
   accepts(...types) {
     return req => req.accepts(...types);
   },
+  acceptCase(types, table) {
+    if (arguments.length === 1)
+      table = types, types = Object.keys(table);
+    var handlers = types.reduce(function(handlers, type) {
+      handlers[type] = Array.isArray(table[type]) ? compose(table[type]) : table[type];
+      return handlers;
+    }, {});
+    return function*(next) {
+      var bestType = this.request.accepts(...types);
+      if (bestType in handlers)
+        yield* handlers[bestType].call(this, next);
+      else yield next;
+    }
+  },
   acceptsEncodings(...codings) {
     return req => req.acceptsEncodings(...codings);
   },
